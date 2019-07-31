@@ -1,19 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert, Button } from 'react-native';
+import { route as route } from '../sections/RouteObj.js';
 
-//ROUTE OBJECT - WILL LIKELY BE USED FOR CREATING ROUTES AFTER PULLING DATA FROM API
-class route {
-    constructor(type, grade, color, setter){
-        this.type = type;
-        this.grade = grade;
-        this.color = color;
-        this.setter = setter;
-    }
-
-    matchesFilter(grades){
-        return ((this.grade >= grades[0]) && (this.grade <= grades[1]));
-    }
-};
 
 
 //building a list of routes
@@ -76,6 +64,16 @@ function TopRoutes(props){
 export class ProfileScreen extends React.Component {
     constructor(props){
         super(props);
+    }
+    
+    static navigatorOptions = {
+        title: 'Leaderboards',
+        headerRight: (
+            <Button
+                title = {'Login'}
+                onPress = {() => this.props.navigation('Login')}
+            />
+        ),
     }
 
 

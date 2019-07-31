@@ -1,5 +1,5 @@
 import React from 'React';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 
 
 function Leaderboard(props){
@@ -14,10 +14,15 @@ function Leaderboard(props){
 
 
 export class LeaderboardScreen extends React.Component{
+
     static navigatorOptions = {
-        headerStyle: {
-            title: 'Leaderboards',
-        }
+        title: 'Leaderboards',
+        headerRight: (
+            <Button
+                title = {'Login'}
+                onPress = {() => this.props.navigation('Login')}
+            />
+        ),
     }
 
     render() {

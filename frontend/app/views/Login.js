@@ -1,69 +1,6 @@
 import React from 'react';
-import { StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Button, Alert } from 'react-native';
-
-class ForgotPassword extends React.Component{
-    constructor (props) {
-        super (props);
-        this.state = {
-            usernameEmail: ''
-        }
-    }
-
-    render() {
-        if(!this.props.display){
-            return null;
-        } else {
-            return (
-                <View style = {styles.forgotPassword}>
-                    <TextInput style = {styles.inputField} placeholder = {'Enter your username or Email'}
-                        value = {this.state.usernameEmail}
-                        onChangeText = {(text) => this.setState({usernameEmail: text})} />
-                    <Button title = {'Enter'} onPress = {() => Alert.alert('Forgot Password', this.state.usernameEmail)} />
-                </View>
-            );
-        }
-    }
-};
-
-
-class NewAccount extends React.Component{
-    constructor (props) {
-        super(props);
-        this.state = {
-            email: '',
-            name: '',
-            username: '',
-            password: '',
-        }
-    }
-
-    returnInfo = () => {
-        var info = `${this.state.email}\n${this.state.username}\n${this.state.password}`;
-        Alert.alert(this.state.name, info);
-    }
-
-
-    render(){
-        if(!this.props.display){
-            return null;
-        } else {
-            return (
-                <View style = {styles.forgotPassword} >
-                    <TextInput style = {styles.inputField} placeholder = {'Name'}
-                        value = {this.state.name} onChangeText = {(text) => this.setState({name: text})} />
-                    <TextInput style = {styles.inputField} placeholder = {'Email'}
-                        value = {this.state.email} onChangeText = {(text) => this.setState({email: text})} />
-                    <TextInput style = {styles.inputField} placeholder = {'Username'}
-                        value = {this.state.username} onChangeText = {(text) => this.setState({username: text})} />
-                    <TextInput style = {styles.inputField} placeholder = {'Password'} secureTextEntry
-                        value = {this.state.Password} onChangeText = {(text) => this.setState({password: text})} />
-                    <TextInput style = {styles.inputField} placeholder = {'Re-enter password'} secureTextEntry />
-                    <Button title = {'Enter'} onPress = {this.returnInfo} />
-                </View>
-            );
-        }
-    }
-};
+import { ForgotPassword, NewAccount } from '../sections/HideableViews.js';
+import { StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Button } from 'react-native';
 
 
 export class LoginScreen extends React.Component {
@@ -89,7 +26,19 @@ export class LoginScreen extends React.Component {
         this.setState({tempPassword: this.state.password});
     }
 
+    toggleForgotPassword = () => {
+        this.setState({
+            displayForgotPassword: !this.state.displayForgotPassword,
+            displayNewAccountForm: false,
+        });
+    }
 
+    toggleNewAccount = () => {
+        this.setState({
+            displayNewAccountForm: !this.state.displayNewAccountForm,
+            displayForgotPassword: false,
+        });
+    }
 
     render() {
         return (
@@ -113,9 +62,9 @@ export class LoginScreen extends React.Component {
                 <View style = {styles.accountOptions}>
                     <Button style = {styles.buttons} title = {'Login'} onPress = {this.sendLogin}/>
                     <Button style = {styles.buttons} title = {'Forgot password'}
-                        onPress = {() => this.setState({displayForgotPassword: !this.state.displayForgotPassword})}/>
+                        onPress = {this.toggleForgotPassword}/>
                     <Button style = {styles.buttons} title = {'Make account'} 
-                        onPress = {() => this.setState({displayNewAccountForm: !this.state.displayNewAccountForm})}/>
+                        onPress = {this.toggleNewAccount}/>
                 </View>
 
                 <View style = {styles.container}>
@@ -147,16 +96,10 @@ const styles = StyleSheet.create ({
     accountOptions: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
     },
     buttons: {
         flex: 1,
         padding: 20,
-    },
-    forgotPassword: {
-
-    },
-    newAccount: {
-
     },
 });
