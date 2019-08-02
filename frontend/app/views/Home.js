@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button, Picker, Alert } from 'react-native';
+import { StyleSheet, Button, View } from 'react-native';
 import { Menu } from '../sections/Menu.js';
 import { RouteSettingHeader } from '../sections/Header.js';
 
@@ -40,5 +40,10 @@ export class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
     },
 });

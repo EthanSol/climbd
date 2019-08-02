@@ -1,12 +1,36 @@
 import React from 'React';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, FlatList, View, Text } from 'react-native';
+import { ProfileCard } from '../sections/ProfileCard.js';
 
+const exampleProfiles = [];
+
+for (let i = 0; i < 20; i++){
+    exampleProfiles.push ({
+        name: 'Ethan',
+        pts: (i*7)%10,
+        rank: i + 1,
+    });
+}
 
 function Leaderboard(props){
     return (
-        <View style = {styles.leaderboardOrientation}>
-            <Text style = {styles.buttonText}>BOULDER</Text>
-            <Text style = {styles.buttonText}>SPORT</Text>
+        <View style = {styles.leaderboardContainer}>
+            <View style = {{alignItems: 'center'}} >
+                <Text style = {styles.pageText} >BOULDER</Text>
+                <FlatList 
+                    style = {styles.leaderboard}
+                    data = {exampleProfiles}
+                    renderItem = {({item}) => <ProfileCard profile = {item} /> }
+                />
+            </View>     
+            <View style = {{alignItems: 'center', paddingTop: 50,}} >
+                <Text style = {styles.pageText} >SPORT</Text>
+                <FlatList 
+                    style = {styles.leaderboard}
+                    data = {exampleProfiles}
+                    renderItem = {({item}) => <ProfileCard profile = {item} /> }
+                />
+            </View>
         </View>
 
     );
@@ -15,20 +39,14 @@ function Leaderboard(props){
 
 export class LeaderboardScreen extends React.Component{
 
-    static navigatorOptions = {
+    static navigationOptions = {
         title: 'Leaderboards',
-        headerRight: (
-            <Button
-                title = {'Login'}
-                onPress = {() => this.props.navigation('Login')}
-            />
-        ),
     }
 
     render() {
         return(
             <>
-                <Text h1>PLACEHOLDER FOR LEADERBOARD</Text>
+                <Text style = {[styles.title, styles.pageText]} >Leaderboard</Text>
                 <Leaderboard />
             </>
         );
@@ -38,24 +56,21 @@ export class LeaderboardScreen extends React.Component{
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 6,
-        backgroundColor: '#2E2E2E',
-        alignItems: 'center',
+    title: {
+        alignSelf: 'center',
+        paddingTop: 10,
+        paddingBottom: 30,
     },
-    leaderboardOrientation: {
-        flex: 4,
-        flexDirection: 'row',
-        backgroundColor: '#FF8000',
-        borderWidth: 20,
-        borderColor: '#ffffff',
+    pageText: {
+        fontSize: 24,
+
     },
-    buttonText: {
-        flex: 2,
-        flexDirection: 'column',
-        fontSize: 20,
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-        color: '#ffffff',
+    leaderboardContainer: {
+        justifyContent: 'space-evenly',
+
     },
+    leaderboard: {
+        height: 200,
+        width: 300,
+    }
 });

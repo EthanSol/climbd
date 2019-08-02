@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert, Button } from 'react-native';
-import { route as route } from '../sections/RouteObj.js';
-
+import { route as route } from '../sections/Route.js';
+import { ClimbCard } from '../sections/ClimbCard';
 
 
 //building a list of routes
@@ -14,47 +14,25 @@ for (let i = 0; i < 13; i++){
 
 
 
-//RENDERING A SINGLE CLIMB OBJECT, WILL BE USEFUL IN FLAT LIST
-function Climb (props) {
-
-        return(
-            <TouchableOpacity 
-            style = {styles.climbContainer}
-            onPress = {() => Alert.alert('You clicked a climb!', 'Congrats!')}>
-                <View style = {{flexDirection: 'row'}}>
-                    <Text style = {styles.climbText}>{props.route.type}</Text>
-                    <Text style = {styles.climbText}>V{props.route.grade}</Text>
-                </View>
-                <View style = {{flexDirection: 'row'}}>
-                    <Text style = {styles.climbText}>{props.route.color}</Text>
-                    <Text style = {styles.climbText}>{props.route.setter}</Text>
-                </View>
-            </TouchableOpacity>
-        );
-
-}
-
-
-
 
 
 
 function TopRoutes(props){
 
     return(
-        <View style = {{flexDirection: 'row'}} >
+        <View style = {styles.routeContainer} >
             <View style = {styles.table} >
-                <Text style = {{textAlign: 'center'}} >Boulder</Text>
+                <Text style = {{textAlign: 'center', fontSize: 14, padding: 5,}} >Boulder</Text>
                 <FlatList 
                     data = {routes}
-                    renderItem = {({item}) => <Climb route = {item} /> }
+                    renderItem = {({item}) => <ClimbCard route = {item} /> }
                 />
             </View>
             <View style = {styles.table} >
-                <Text style = {{textAlign: 'center'}} >Sport</Text>
+                <Text style = {{textAlign: 'center', fontSize: 14, padding: 5,}} >Sport</Text>
                 <FlatList 
                     data = {routes}
-                    renderItem = {({item}) => <Climb route = {item} /> }
+                    renderItem = {({item}) => <ClimbCard route = {item} /> }
                 />
             </View>
         </View>
@@ -64,27 +42,34 @@ function TopRoutes(props){
 export class ProfileScreen extends React.Component {
     constructor(props){
         super(props);
+        this.state = {
+            currentRank: 'none',
+            highestRank: 'none',
+        }
     }
     
-    static navigatorOptions = {
-        title: 'Leaderboards',
-        headerRight: (
-            <Button
-                title = {'Login'}
-                onPress = {() => this.props.navigation('Login')}
-            />
-        ),
+    static navigationOptions = {
+        title: 'Profile Information',
     }
 
 
     render() {
         return (
             <View style = {styles.container} >
-                <Text style = {styles.infoText} >Ethan</Text>
-                <Text style = {styles.infoText} >Boulder Pts: 33</Text>
-                <Text style = {styles.infoText} >Sport Pts: 45</Text>
-                <Text style = {[styles.infoText, {textAlign: 'center'}]} >Top Routes</Text>
+                <View >
+                    <Text style = {styles.infoText} >Ethan</Text>
+                    <Text style = {styles.infoText} >Boulder Pts: 33</Text>
+                    <Text style = {styles.infoText} >Sport Pts: 45</Text>
+                    <Text style = {[styles.infoText, {textAlign: 'center'}]} >Top Routes</Text> 
+                </View>
+
                 <TopRoutes />
+
+                <View >
+                    <Text style = {styles.infoText} >Current Rank: {this.state.currentRank}</Text>
+                    <Text style = {styles.infoText} >Highest Rank: {this.state.highestRank}</Text>
+                </View>
+
             </View>
         );
 
@@ -100,15 +85,11 @@ const styles = StyleSheet.create({
     infoText: {
         padding: 5,
         fontSize: 25,
+        alignSelf: 'center',
     },
     table: {
         flex: 1,
 
-    },
-    climbContainer: {
-        flex: 2,
-        borderWidth: 1,
-        backgroundColor: '#2E2E2E',
     },
     climbText: {
         flex: 1,
@@ -116,4 +97,8 @@ const styles = StyleSheet.create({
         color: '#FF8000',
         textAlign: 'center',
     },
+    routeContainer: {
+        flexDirection: 'row',
+        height: 400,
+    }
 });

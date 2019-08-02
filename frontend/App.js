@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppRegistry, Button } from 'react-native';
 import { HomeScreen } from './app/views/Home.js';
 import { LeaderboardScreen } from './app/views/Leaderboard.js';
@@ -9,6 +8,7 @@ import { createStackNavigator, createAppContainer, NavigationEvents } from 'reac
 import { EditClimbsScreen } from './app/views/EditClimbs.js';
 import { AddRouteScreen } from './app/views/AddRoute.js';
 import { ClearSectionScreen } from './app/views/ClearSection.js';
+import { ClimbInfoScreen } from './app/views/ClimbInfo.js';
 
 
 let username = 'Login';
@@ -17,26 +17,16 @@ updateUsername = (name) => {username = name}
 
 const MyRoutes = createStackNavigator({
   EditRoutes: {screen: EditClimbsScreen},
-  AddRoute: {screen: AddRouteScreen},
   ClearSection: {screen: ClearSectionScreen},
   Leaderboard: {screen: LeaderboardScreen},
   BrowseClimbs: {screen: BrowseClimbsScreen},
   Login: {screen: LoginScreen},
   Profile: {screen: ProfileScreen},
+  ClimbInfo: {screen: ClimbInfoScreen},
   Home: {screen: HomeScreen},
-
 },
   {
     initialRouteName: 'Home',
-
-    // defaultNavigationOptions: {
-    //   headerRight: (
-    //     <Button
-    //       title = {username}
-    //       onPress = {() => NavigationEvents.navigation('Login')}
-    //     />
-    //   ),
-    // },
   }
 );
 
