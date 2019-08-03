@@ -13,13 +13,13 @@ class Route(models.Model):
     color = models.CharField(max_length=10)
     date = models.DateTimeField(auto_now_add=True)
     setter = models.ForeignKey(Profile, on_delete=models.PROTECT)
-    xloc = models.IntegerField()
-    yloc = models.IntegerField()
+    xloc = models.IntegerField(blank=True, null=True)
+    yloc = models.IntegerField(blank=True, null=True)
     discipline = models.CharField(max_length=10)
     description = models.CharField(max_length=80, blank=True, default='')
 
 class Comment(models.Model):
-    poster = models.ForeignKey(User, on_delete=models.PROTECT)
+    poster = models.ForeignKey(Profile, on_delete=models.PROTECT)
     route = models.ForeignKey(Route, on_delete=models.CASCADE)
     text = models.CharField(max_length=140)
     rating = models.IntegerField(null=True, blank=True)
