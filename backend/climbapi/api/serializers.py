@@ -14,10 +14,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class RouteSerializer(serializers.ModelSerializer):
-    def __init__(self, *args, **kwargs):
-        self.comments  = serializers.PrimaryKeyRelatedField(many=True, queryset=Comment.objects.filter(route=self.fields['route']))
-        super(RouteSerializer, self).__init__(*args, **kwargs)
+    # comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Route
-        fields = '__all__'
+        fields = ['name', 'color', 'date', 'setter', 'xloc', 'yloc', 'discipline', 'description', 'comments']
+        depth = 2

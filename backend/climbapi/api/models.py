@@ -12,7 +12,7 @@ class Route(models.Model):
     name = models.CharField(max_length=50)
     color = models.CharField(max_length=10)
     date = models.DateTimeField(auto_now_add=True)
-    setter = models.ForeignKey('Profile', on_delete=models.PROTECT)
+    setter = models.ForeignKey('Profile', on_delete=models.PROTECT, blank=True)
     xloc = models.IntegerField(blank=True, null=True)
     yloc = models.IntegerField(blank=True, null=True)
     discipline = models.CharField(max_length=10)
@@ -20,6 +20,6 @@ class Route(models.Model):
 
 class Comment(models.Model):
     poster = models.ForeignKey('Profile', on_delete=models.PROTECT)
-    route = models.ForeignKey('Route', on_delete=models.CASCADE)
+    route = models.ForeignKey('Route', related_name='comments', on_delete=models.CASCADE)
     text = models.CharField(max_length=140)
     rating = models.IntegerField(null=True, blank=True)
