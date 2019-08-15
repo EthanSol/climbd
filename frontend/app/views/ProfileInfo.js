@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert, Button } from 'react-native';
+import { Overlay } from 'react-native-elements';
 import { route as route } from '../sections/Route.js';
 import { ClimbCard } from '../sections/ClimbCard';
 
@@ -25,26 +26,26 @@ function TopRoutes(props){
                 <Text style = {{textAlign: 'center', fontSize: 14, padding: 5,}} >Boulder</Text>
                 <FlatList 
                     data = {routes}
-                    renderItem = {({item}) => <ClimbCard route = {item} /> }
+                    renderItem = {({item}) => <ClimbCard navigate = {props.navigate} route = {item} /> }
                 />
             </View>
             <View style = {styles.table} >
                 <Text style = {{textAlign: 'center', fontSize: 14, padding: 5,}} >Sport</Text>
                 <FlatList 
                     data = {routes}
-                    renderItem = {({item}) => <ClimbCard route = {item} /> }
+                    renderItem = {({item}) => <ClimbCard navigate = {props.navigate} route = {item} /> }
                 />
             </View>
         </View>
     );
 }
 
+
 export class ProfileScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            currentRank: 'none',
-            highestRank: 'none',
+            overlay: false,
         }
     }
     
@@ -54,8 +55,19 @@ export class ProfileScreen extends React.Component {
 
 
     render() {
+
+        const { navigate } = this.props.navigation
+
         return (
             <View style = {styles.container} >
+
+                <Overlay isVisible = {this.state.overlay} onBackdropPress = {()=>this.setState({overlay: false})} >
+                    <FlatList 
+                        data = {routes}
+                        renderItem = {({item}) => <ClimbCard navigate = {navigate} route = {item} /> }
+                    />
+                </Overlay>
+
                 <View >
                     <Text style = {styles.infoText} >Ethan</Text>
                     <Text style = {styles.infoText} >Boulder Pts: 33</Text>
@@ -63,13 +75,9 @@ export class ProfileScreen extends React.Component {
                     <Text style = {[styles.infoText, {textAlign: 'center'}]} >Top Routes</Text> 
                 </View>
 
-                <TopRoutes />
+                <TopRoutes navigate = {navigate} />
 
-                <View >
-                    <Text style = {styles.infoText} >Current Rank: {this.state.currentRank}</Text>
-                    <Text style = {styles.infoText} >Highest Rank: {this.state.highestRank}</Text>
-                </View>
-
+                <Button title = {"View Projects"} onPress = {() => this.setState({overlay: true})} />
             </View>
         );
 

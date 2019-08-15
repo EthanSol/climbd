@@ -1,32 +1,30 @@
-import { AppRegistry, Button } from 'react-native';
+import React from 'react';
+import { AppRegistry, Stylesheet, TouchableOpacity, View, Text } from 'react-native';
 import { HomeScreen } from './app/views/Home.js';
 import { LeaderboardScreen } from './app/views/Leaderboard.js';
 import { BrowseClimbsScreen } from './app/views/BrowseClimb.js';
-import { LoginScreen } from './app/views/Login.js';
 import { ProfileScreen } from './app/views/ProfileInfo.js';
 import { createStackNavigator, createAppContainer, NavigationEvents } from 'react-navigation';
 import { EditClimbsScreen } from './app/views/EditClimbs.js';
-import { AddRouteScreen } from './app/views/AddRoute.js';
-import { ClearSectionScreen } from './app/views/ClearSection.js';
+import { ManageAccountsScreen } from './app/views/ManageAccounts.js';
 import { ClimbInfoScreen } from './app/views/ClimbInfo.js';
-
-
-let username = 'Login';
-
-updateUsername = (name) => {username = name}
+import { Login } from './app/sections/LoginOverlay.js';
 
 const MyRoutes = createStackNavigator({
   EditRoutes: {screen: EditClimbsScreen},
-  ClearSection: {screen: ClearSectionScreen},
+  ManageAccounts: {screen: ManageAccountsScreen},
   Leaderboard: {screen: LeaderboardScreen},
   BrowseClimbs: {screen: BrowseClimbsScreen},
-  Login: {screen: LoginScreen},
   Profile: {screen: ProfileScreen},
   ClimbInfo: {screen: ClimbInfoScreen},
   Home: {screen: HomeScreen},
 },
   {
     initialRouteName: 'Home',
+
+    defaultNavigationOptions: {
+      headerRight: (<Login />),
+    },
   }
 );
 

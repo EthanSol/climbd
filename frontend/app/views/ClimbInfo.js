@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, Button, Alert, FlatList, AsynchStorage } from 'react-native';
 import { CommentCard } from '../sections/CommentCard';
-import { Overlay } from 'react-native-elements';
+import { Overlay, Rating } from 'react-native-elements';
 
 const exampleComments = [];
 
@@ -29,6 +29,7 @@ export class ClimbInfoScreen extends React.Component {
 
             },
             overlay: false,
+            ratingValue: null,
         }
     }
 
@@ -44,10 +45,15 @@ export class ClimbInfoScreen extends React.Component {
                 <Overlay
                     isVisible = {this.state.overlay}
                     onBackdropPress = {() => this.setState({overlay: false})} >
-                    <View >
+                    <View style = {{justifyContent: 'space-evenly'}} >
                         <Text >Form for sending</Text>
+                        <Rating
+                            onFinishRating = {(value) => this.setState({ratingValue: value})}
+                            showRating = {false}
+                            defaultRating = {3}
+                        />
                         <View style = {{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                            <Button title = {'Submit'} onPress = {() => this.setState({overlay: false})} />
+                            <Button title = {'Confirm'} onPress = {() => this.setState({overlay: false})} />
                             <Button title = {'Cancel'} onPress = {() => this.setState({overlay: false})} />                             
                         </View>
                        

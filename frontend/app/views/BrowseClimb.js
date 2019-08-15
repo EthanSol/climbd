@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, FlatList, Button } from 'react-native';
 import { Overlay } from 'react-native-elements';
-import { GradeFilter } from '../sections/GradeTypeFilter.js';
+import { RouteFilterOverlay } from '../sections/RouteFilterOverlay.js';
 import { route as route } from '../sections/Route.js';
 import { ClimbCard } from '../sections/ClimbCard.js';
 import { MapFilter } from '../sections/ClickableMap.js';
@@ -32,12 +32,6 @@ export class BrowseClimbsScreen extends React.Component {
 
     static navigationOptions = {
         title: 'Browse Climbs',
-        headerRight: (
-            <Button
-                title = {'Login'}
-                onPress = {() => props.navigation.navigate('Login')}
-            />
-        ),
     }
 
     updateBoulderGrades = values => {
@@ -58,20 +52,15 @@ export class BrowseClimbsScreen extends React.Component {
 
         return(
             <View style = {styles.container}>
-                <Overlay isVisible = {this.state.overlay} onBackdropPress = {() => this.setState({overlay: false})} >
-                    <View >
-                        <GradeFilter updateBoulderGrades = {this.updateBoulderGrades} />
-                        <View style = {{flexDirection: 'row', justifyContent: 'space-evenly'}} >
-                            <Button title = {'Submit'} onPress = {() => this.setState({overlay: false})} />
-                            <Button title = {'Cancel'} onPress = {() => this.setState({overlay: false})} />
-                        </View>                        
-                    </View>
-                </Overlay>
+                <RouteFilterOverlay
+                    overlay = {this.state.overlay}
+                    updateOverlay = {(state) => this.setState({overlay: state})}
+                />                      
                 <Button title = {'Filters'} onPress  ={() => this.setState({overlay: true})} />
-                <MapFilter
+                {/* <MapFilter
                     returnCoordinates = {this.getCoordinates}
                     clearFilter = {() => this.setState({posX: null, posY: null})}
-                />
+                /> */}
                 <FlatList
                     style = {styles.climbContainer}
                     data = { routes }
@@ -104,4 +93,5 @@ const styles = StyleSheet.create({
         color: '#FF8000',
         textAlign: 'center',
     },
+
 });

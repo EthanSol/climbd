@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 14168,
   "expoServerNgrokUrl": "https://u4-rjz.anonymous.frontend.exp.direct",
   "packagerNgrokUrl": "https://packager.u4-rjz.anonymous.frontend.exp.direct",
-  "ngrokPid": 4352,
+  "ngrokPid": 11588,
   "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 11748
+  "expoServerPort": 19000
 }

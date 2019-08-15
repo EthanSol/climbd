@@ -1,10 +1,10 @@
 import React from 'react';
-import { AsyncStorage, TouchableOpacity, Text, View, StyleSheet, Alert } from 'react-native';
+import { AsyncStorage, Image, FlatList, TouchableOpacity, Text, View, StyleSheet, Alert } from 'react-native';
 import { RouteSettingHeader } from '../sections/Header.js';
-import ActionButton, { ActionButtonItem } from 'react-native-action-button';
-import { Icon, Overlay } from 'react-native-elements';
+import { Icon, Overlay, Button } from 'react-native-elements';
 import { ClimbCardSetter } from '../sections/ClimbCard.js';
-import { AddRoute } from '../sections/AddRoute.js';
+import { EditRouteOverlay } from '../sections/EditRouteOverlay.js';
+import { RouteFilterOverlay } from '../sections/RouteFilterOverlay.js';
 
 
 const exampleRoutes = [];
@@ -12,8 +12,8 @@ const exampleRoutes = [];
 for (let i = 0; i < 40; i++){
     exampleRoutes.push ({
         type: 'Boulder',
-        grade: 'V6',
-        setterName: 'Ethan',
+        grade: 6,
+        setter: 'Ethan',
         color: 'Red',
     });
 }
@@ -24,7 +24,9 @@ export class EditClimbsScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            overlay: false,
+            filterOverlay: false,
+            addRouteOverlay: false,
+            search: '',
         }
     }
 
@@ -32,27 +34,42 @@ export class EditClimbsScreen extends React.Component {
         title: 'Edit Climbs',
     }
 
-
     render() {
 
         const {navigate} = this.props.navigation;
 
         return(
                 <View style={{flex:1, backgroundColor: '#f3f3f3'}}>
-                    <Overlay
-                        isVisible = {this.state.overlay}
-                        onBackdropPress = {() => this.setState({overlay: false})}
-                    >
-                        <AddRoute />
-                    </Overlay>
+                    <RouteFilterOverlay
+                        overlay = {this.state.filterOverlay}
+                        updateOverlay = {(state) => this.setState({filterOverlay: state})}
+                    />
+
+                    <EditRouteOverlay
+                        visible = {this.state.addRouteOverlay}
+                        closeRouteOverlay = {() => this.setState({addRouteOverlay: false})}
+                    />
+
+
                     <RouteSettingHeader displaySetting = {true} navigate = {navigate} />
-                    <TouchableOpacity style = {styles.iconWrap} >
-                        <Icon name="add-circle"
-                            onPress = {() => this.setState({overlay: true})}
-                            iconStyle = {styles.actionButtonIcon}
-                            color = 'red'
-                            fontSize = {40}
-                            borderRadius = {20}
+
+                    <Button title = {"Filters"} onPress = {() => this.setState({filterOverlay: true})} />
+
+                    <View >
+                        <FlatList
+                            data = { exampleRoutes }
+                            renderItem = {({item}) => <ClimbCardSetter route = {item} />}
+                        />                        
+                    </View>
+
+
+                    <TouchableOpacity
+                        style = {styles.plusWrap}
+                        onPress = {() => this.setState({addRouteOverlay: true})}
+                    >
+                        <Image
+                            style = {styles.plus}
+                            source = {require('../sections/img/plus.png')}
                         />                         
                     </TouchableOpacity>
                    
@@ -68,11 +85,15 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'red',
     },
-    iconWrap: {
+    plusWrap: {
         position: 'absolute',
         bottom: 20,
-        right: 20,
+        right: 0,
         borderRadius: 30,
         color: 'black',
-    }
+    },
+    plus: {
+        height: 60,
+        resizeMode: 'contain',
+    },
 });

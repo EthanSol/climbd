@@ -43,7 +43,7 @@ export function Menu (props){
             
             <MenuRow
                 msgLeft = 'My Stats' routeLeft = 'Profile'
-                msgRight = 'Login' routeRight = 'Login'
+                msgRight = 'Login'
             />
         </View>
     );
