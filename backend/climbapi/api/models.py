@@ -11,6 +11,7 @@ class Profile(models.Model):
 class Route(models.Model):
     name = models.CharField(max_length=50)
     color = models.CharField(max_length=10)
+    grade = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
     setter = models.ForeignKey('Profile', on_delete=models.PROTECT, blank=True)
     xloc = models.IntegerField(blank=True, null=True)

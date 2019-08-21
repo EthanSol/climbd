@@ -1,34 +1,15 @@
 from django.shortcuts import render
-from .serializers import RouteSerializer
+from .serializers import ListRouteSerializer, DetailRouteSerializer, ProfileSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions, generics
-from .models import Route
-
-# Create your views here.
-# class RouteList(APIView):
-#     """ 
-#         List routes, or create a route
-#     """
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-#     def get(self, request, format=None):
-#         routes = Route.objects.all()
-#         serializer = RouteSerializer(routes, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request, format=None):
-#         serializer = RouteSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save(setter=request.user.profile)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from .models import Route, Profile
+import copy
 
 class RouteList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Route.objects.all()
-    serializer_class = RouteSerializer
+    serializer_class = ListRouteSerializer
 
     def perform_create(self, serializer):
         serializer.save(setter=self.request.user.profile)
@@ -36,5 +17,55 @@ class RouteList(generics.ListCreateAPIView):
 class RouteDetail(generics.RetrieveUpdateDestroyAPIView):
     # create a permissions class that checks if a user is a setter, otherwise read only
     queryset = Route.objects.all()
-    serializer_class = RouteSerializer
+    serializer_class = DetailRouteSerializer
 
+class ProfileDetail(generics.RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+
+    def patch(self, request, pk):
+        p = Profile.objects.get(pk=pk)
+        ps = ProfileSerializer(p)
+        data = copy.deepcopy(ps.data)
+
+        if 'completed' in request.data:
+            r = Route.objects.get(pk=request.data['completed'])
+            rs = ListRouteSerializer(r)
+            data['completed'].append(rs.data)
+        elif 'projects' in request.data:
+            r = Route.objects.get(pk=request.data['projects'])
+            rs = ListRouteSerializer(r)
+            data['projects'].append(rs.data)
+        else:
+            return Response(status=400)
+        
+        serializer = ProfileSerializer(p, data=data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=request.data, status=201)
+        else:
+            return Response(status=400)
+
+class ProfileDetail2(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get(self, request, pk=None):
+        if pk is None:
+            return Response(ProfileSerializer(Profile.objects.get(user=self.request.user)).data)
+        else:
+            return Response(ProfileSerializer(Profile.objects.get(pk=pk)).data)
+
+    def patch(self, request):
+        p = Profile.objects.get(user=self.request.user)
+        if 'completed' in request.data:
+            r = Route.objects.get(pk=request.data['completed'])
+            p.completed.add(r)
+            p.save()
+            return Response(data=request.data, status=201)
+        elif 'projects' in request.data:
+            r = Route.objects.get(pk=request.data['projects'])
+            p.completed.add(r)
+            p.save()
+            return Response(data=request.data, status=201)
+        return Response(status=400)
