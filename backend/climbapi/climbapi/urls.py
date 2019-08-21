@@ -16,14 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework.authtoken import views
-from api.views import RouteList, RouteDetail, ProfileDetail, ProfileDetail2
+from api.views import RouteList, RouteDetail, ProfileDetail, LeaderboardView
 
 api_urlpatterns = [
     path('accounts/', include('rest_registration.api.urls')),
     path('routes/', RouteList.as_view()),
     path('routes/<int:pk>', RouteDetail.as_view()),
-    path('profiles/<int:pk>', ProfileDetail2.as_view()),
-    path('profiles/', ProfileDetail2.as_view()),
+    path('profiles/<int:pk>', ProfileDetail.as_view()),
+    path('profiles/', ProfileDetail.as_view()),
+    path('leaderboard/', LeaderboardView.as_view())
 ]
 
 urlpatterns = [

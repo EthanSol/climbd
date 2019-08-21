@@ -53,3 +53,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     #     #     instance.projects += validated_data.get('projects', instance.projects)
     #     #     instance.save()
     #     return instance
+
+class LeaderboardSerializer(serializers.ModelSerializer):
+    score = serializers.FloatField(source='completed__grade__sum')
+    user = serializers.CharField(source='user.username')
+
+    class Meta:
+        model = Profile
+        fields = ['user', 'score']
