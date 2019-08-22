@@ -10,7 +10,6 @@ import copy
 
 class RouteList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    serializer_class = ListRouteSerializer
 
     def perform_create(self, serializer):
         serializer.save(setter=self.request.user.profile)
@@ -20,6 +19,12 @@ class RouteList(generics.ListCreateAPIView):
         if len(self.request.query_params) > 0:
             queryset = queryset.filter(**self.request.query_params.dict())
         return queryset
+    
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ListRouteSerializer
+        if self.request.method == 'POST':
+            return DetailRouteSerializer
 
 class RouteDetail(generics.RetrieveUpdateDestroyAPIView):
     # create a permissions class that checks if a user is a setter, otherwise read only
