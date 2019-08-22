@@ -9,12 +9,17 @@
   },
   "dependencies": {
     "@ptomasroos/react-native-multi-slider": "^1.0.0",
+    "@react-native-community/async-storage": "^1.6.1",
     "expo": "^33.0.0",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react-native-action-button": "^2.8.5",
+    "react-native-elements": "^1.1.0",
+    "react-native-vector-icons": "^6.6.0",
     "react-native-web": "^0.11.4",
-    "react-navigation": "^3.11.1"
+    "react-navigation": "^3.11.1",
+    "yarn": "^1.17.3"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.1.1"

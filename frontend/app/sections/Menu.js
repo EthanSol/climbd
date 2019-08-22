@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
 
+
 function MenuRow(props){
     return(
         <View
@@ -42,7 +43,7 @@ export function Menu (props){
             
             <MenuRow
                 msgLeft = 'My Stats' routeLeft = 'Profile'
-                msgRight = 'Login' routeRight = 'Login'
+                msgRight = 'Login'
             />
         </View>
     );

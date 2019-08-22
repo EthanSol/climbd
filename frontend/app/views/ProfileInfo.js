@@ -1,19 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
-
-//ROUTE OBJECT - WILL LIKELY BE USED FOR CREATING ROUTES AFTER PULLING DATA FROM API
-class route {
-    constructor(type, grade, color, setter){
-        this.type = type;
-        this.grade = grade;
-        this.color = color;
-        this.setter = setter;
-    }
-
-    matchesFilter(grades){
-        return ((this.grade >= grades[0]) && (this.grade <= grades[1]));
-    }
-};
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, Alert, Button } from 'react-native';
+import { Overlay } from 'react-native-elements';
+import { route as route } from '../sections/Route.js';
+import { ClimbCard } from '../sections/ClimbCard';
 
 
 //building a list of routes
@@ -26,67 +15,69 @@ for (let i = 0; i < 13; i++){
 
 
 
-//RENDERING A SINGLE CLIMB OBJECT, WILL BE USEFUL IN FLAT LIST
-function Climb (props) {
-
-        return(
-            <TouchableOpacity 
-            style = {styles.climbContainer}
-            onPress = {() => Alert.alert('You clicked a climb!', 'Congrats!')}>
-                <View style = {{flexDirection: 'row'}}>
-                    <Text style = {styles.climbText}>{props.route.type}</Text>
-                    <Text style = {styles.climbText}>V{props.route.grade}</Text>
-                </View>
-                <View style = {{flexDirection: 'row'}}>
-                    <Text style = {styles.climbText}>{props.route.color}</Text>
-                    <Text style = {styles.climbText}>{props.route.setter}</Text>
-                </View>
-            </TouchableOpacity>
-        );
-
-}
-
-
-
 
 
 
 function TopRoutes(props){
 
     return(
-        <View style = {{flexDirection: 'row'}} >
+        <View style = {styles.routeContainer} >
             <View style = {styles.table} >
-                <Text style = {{textAlign: 'center'}} >Boulder</Text>
+                <Text style = {{textAlign: 'center', fontSize: 14, padding: 5,}} >Boulder</Text>
                 <FlatList 
                     data = {routes}
-                    renderItem = {({item}) => <Climb route = {item} /> }
+                    renderItem = {({item}) => <ClimbCard navigate = {props.navigate} route = {item} /> }
                 />
             </View>
             <View style = {styles.table} >
-                <Text style = {{textAlign: 'center'}} >Sport</Text>
+                <Text style = {{textAlign: 'center', fontSize: 14, padding: 5,}} >Sport</Text>
                 <FlatList 
                     data = {routes}
-                    renderItem = {({item}) => <Climb route = {item} /> }
+                    renderItem = {({item}) => <ClimbCard navigate = {props.navigate} route = {item} /> }
                 />
             </View>
         </View>
     );
 }
 
+
 export class ProfileScreen extends React.Component {
     constructor(props){
         super(props);
+        this.state = {
+            overlay: false,
+        }
+    }
+    
+    static navigationOptions = {
+        title: 'Profile Information',
     }
 
 
     render() {
+
+        const { navigate } = this.props.navigation
+
         return (
             <View style = {styles.container} >
-                <Text style = {styles.infoText} >Ethan</Text>
-                <Text style = {styles.infoText} >Boulder Pts: 33</Text>
-                <Text style = {styles.infoText} >Sport Pts: 45</Text>
-                <Text style = {[styles.infoText, {textAlign: 'center'}]} >Top Routes</Text>
-                <TopRoutes />
+
+                <Overlay isVisible = {this.state.overlay} onBackdropPress = {()=>this.setState({overlay: false})} >
+                    <FlatList 
+                        data = {routes}
+                        renderItem = {({item}) => <ClimbCard navigate = {navigate} route = {item} /> }
+                    />
+                </Overlay>
+
+                <View >
+                    <Text style = {styles.infoText} >Ethan</Text>
+                    <Text style = {styles.infoText} >Boulder Pts: 33</Text>
+                    <Text style = {styles.infoText} >Sport Pts: 45</Text>
+                    <Text style = {[styles.infoText, {textAlign: 'center'}]} >Top Routes</Text> 
+                </View>
+
+                <TopRoutes navigate = {navigate} />
+
+                <Button title = {"View Projects"} onPress = {() => this.setState({overlay: true})} />
             </View>
         );
 
@@ -102,15 +93,11 @@ const styles = StyleSheet.create({
     infoText: {
         padding: 5,
         fontSize: 25,
+        alignSelf: 'center',
     },
     table: {
         flex: 1,
 
-    },
-    climbContainer: {
-        flex: 2,
-        borderWidth: 1,
-        backgroundColor: '#2E2E2E',
     },
     climbText: {
         flex: 1,
@@ -118,4 +105,8 @@ const styles = StyleSheet.create({
         color: '#FF8000',
         textAlign: 'center',
     },
+    routeContainer: {
+        flexDirection: 'row',
+        height: 400,
+    }
 });
