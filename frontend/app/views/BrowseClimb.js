@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, FlatList, Button } from 'react-native';
+import { StyleSheet, View, FlatList, Text, Button } from 'react-native';
 import { Overlay } from 'react-native-elements';
 import { RouteFilterOverlay } from '../sections/RouteFilterOverlay.js';
 import { route as route } from '../sections/Route.js';
@@ -22,11 +22,17 @@ export class BrowseClimbsScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            boulderGrades: [0, 13],
-            sportGrades: [5.5, 5.13],
             overlay: false,
-            posX: null,
-            posY: null,
+            filters: {
+                seeBoulders: true,
+                boulderValues: [0, 13],
+        
+                seeSport: true,
+                sportValues: [4, 13],
+    
+                posX: null,
+                posY: null,
+            }
         }
     }
 
@@ -46,21 +52,53 @@ export class BrowseClimbsScreen extends React.Component {
         this.setState({posX: x, posY: y})
     }
 
+    updateFilters = (filters) => {
+        this.setState({filters: filters});
+        //MAKE API CALL
+    }
+
     render() {
 
         const { navigate } = this.props.navigation;
 
+        let locationFilter;
+        let boulderFilter;
+        let sportFilter;
+
+        if (this.state.filters.posX && this.state.filters.posY){
+            locationFilter = 'Location (applied)';
+        } else {
+            locationFilter = 'Location (none)';
+        }
+
+        if(this.state.filters.seeBoulders){
+            boulderFilter = `Boulders: V${this.state.filters.boulderValues[0]} - V${this.state.filters.boulderValues[1]}`;
+        } else {
+            boulderFilter = 'Boulders: (N/A)'
+        }
+
+        if(this.state.filters.seeSport){
+            sportFilter = `Sport: 5.${this.state.filters.sportValues[0]} - 5.${this.state.filters.sportValues[1]}`;
+        } else {
+            sportFilter = 'Sport: (N/A)'
+        }
+
         return(
             <View style = {styles.container}>
                 <RouteFilterOverlay
+                    returnFilters = {this.updateFilters}
                     overlay = {this.state.overlay}
                     updateOverlay = {(state) => this.setState({overlay: state})}
-                />                      
+                />
+
+                <View style = {{padding: 10}}>
+                    <Text style = {styles.filterText} >{locationFilter}</Text>
+                    <Text style = {styles.filterText} >{boulderFilter}</Text>
+                    <Text style = {styles.filterText} >{sportFilter}</Text>
+                </View>
+
                 <Button title = {'Filters'} onPress  ={() => this.setState({overlay: true})} />
-                {/* <MapFilter
-                    returnCoordinates = {this.getCoordinates}
-                    clearFilter = {() => this.setState({posX: null, posY: null})}
-                /> */}
+
                 <FlatList
                     style = {styles.climbContainer}
                     data = { routes }
@@ -93,5 +131,8 @@ const styles = StyleSheet.create({
         color: '#FF8000',
         textAlign: 'center',
     },
-
+    filterText: {
+        padding: 2,
+        fontSize: 14,
+    }
 });
