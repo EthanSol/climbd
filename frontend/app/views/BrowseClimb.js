@@ -1,20 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, FlatList, Text, Button } from 'react-native';
-import { Overlay } from 'react-native-elements';
 import { RouteFilterOverlay } from '../sections/RouteFilterOverlay.js';
 import { route as route } from '../sections/Route.js';
 import { ClimbCard } from '../sections/ClimbCard.js';
-import { MapFilter } from '../sections/ClickableMap.js';
 
-
-
-//building a list of routes
-var routes = [];
-
-for (let i = 0; i < 13; i++){
-    routes.push( new route('Boulder', i, 'red', 'Ethan'));
-    routes.push( new route('Boulder', i , 'blue', 'Tudor'));
-}
+const root = `http://10.0.2.2:8000`;
 
 
 
@@ -22,6 +12,7 @@ export class BrowseClimbsScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            routeData: [],
             overlay: false,
             filters: {
                 seeBoulders: true,
@@ -57,6 +48,16 @@ export class BrowseClimbsScreen extends React.Component {
         //MAKE API CALL
     }
 
+    getRoutesFromAPI() {
+        fetch(root + '/api/routes').
+            then(response => response.json()).
+            then(responseJson => this.setState({routeData: responseJson}));
+    }
+
+    componentDidMount() {
+        this.getRoutesFromAPI();
+    }
+
     render() {
 
         const { navigate } = this.props.navigation;
@@ -83,6 +84,20 @@ export class BrowseClimbsScreen extends React.Component {
             sportFilter = 'Sport: (N/A)'
         }
 
+        let routeList;
+        if(this.state.routeData.length){
+            routeList = 
+                <FlatList
+                    style = {styles.climbContainer}
+                    data = { this.state.routeData }
+                    renderItem = {({item}) => <ClimbCard navigate = {navigate} route = {item} />}
+                />
+        } else {
+            routeList = 
+                <Text style = {{alignSelf: 'center', fontSize: 30}} >No routes found</Text>
+        }
+
+
         return(
             <View style = {styles.container}>
                 <RouteFilterOverlay
@@ -98,12 +113,7 @@ export class BrowseClimbsScreen extends React.Component {
                 </View>
 
                 <Button title = {'Filters'} onPress  ={() => this.setState({overlay: true})} />
-
-                <FlatList
-                    style = {styles.climbContainer}
-                    data = { routes }
-                    renderItem = {({item}) => <ClimbCard navigate = {navigate} route = {item} />}
-               />
+                {routeList}
             </View>
 
         );

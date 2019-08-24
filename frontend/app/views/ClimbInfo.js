@@ -6,6 +6,8 @@ import { MapFilter } from '../sections/ClickableMap';
 
 const exampleComments = [];
 
+const root = 'http://10.0.2.2:8000';
+
 for(let i = 0; i < 20; i++){
     exampleComments.push({
         username: 'strongboy69',
@@ -14,21 +16,25 @@ for(let i = 0; i < 20; i++){
     });
 }
 
-
+//['id', 'name', 'color', 'date', 'grade', 'setter', 'xloc', 'yloc', 'discipline', 'description', 'comments', 'completed_users']
 export class ClimbInfoScreen extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            climbId: 'xyz-examine-your-zipper',
+            routeID: 'none',
             climb: {
-                type: 'Boulder',
-                grade: 'V6',
-                color: 'White',
-                numberOfSends: '25',
-                averageRating: '*****',
-                setterDescription: 'A really high quality boulder. It has a bunch of small crimps that force you to campus it like a board. Enjoy :)',
-                locX: 44.29,
-                locY: 99.43,
+                name: 'none',
+                discipline: 'none',
+                date: 'unknown',
+                grade: 0,
+                setter: 'no name',
+                color: 'none',
+                completed_users: 0,
+                averageRating: 3,
+                description: 'A really high quality boulder. It has a bunch of small crimps that force you to campus it like a board. Enjoy :)',
+                xloc: 50,
+                yloc: 50,
+                comments: [],
             },
             overlay: false,
             ratingValue: null,
@@ -39,8 +45,18 @@ export class ClimbInfoScreen extends React.Component {
         title: 'Climb Info'
     }
 
-    render(){
+    componentDidMount(){
+        const { navigation } = this.props;
+        this.setState({routeID: navigation.getParam('routeID', 'NO-ID')});
+        console.log(navigation.getParam('routeID', 'NO-ID'));
+        console.log(this.state.routeID);
+        fetch(root + `/api/routes/${navigation.getParam('routeID', 'NO-ID')}`).
+            then(response => response.json()).
+            then(responseJSON => this.setState({climb: responseJSON}));
 
+    }
+
+    render(){
 
         return (
             <ScrollView >
@@ -63,7 +79,7 @@ export class ClimbInfoScreen extends React.Component {
 
                 </Overlay>
 
-                <Text style = {styles.title} >{this.state.climb.type}</Text>
+                <Text style = {styles.title} >{this.state.climb.discipline}</Text>
 
                 <View style = {styles.stats} >
                     <View >
@@ -73,14 +89,14 @@ export class ClimbInfoScreen extends React.Component {
 
                     <View >
                         <Text style = {styles.pageText} >Color: {this.state.climb.color}</Text>
-                        <Text style = {styles.pageText} >Sends: {this.state.climb.numberOfSends}</Text>
+                        <Text style = {styles.pageText} >Sends: {this.state.climb.completed_users}</Text>
                     </View>
                 </View>
 
-                <MapFilter touch = {false} locX = {this.state.climb.locX} locY = {this.state.climb.locY} />
+                <MapFilter touch = {false} locX = {this.state.climb.xloc} locY = {this.state.climb.yloc} />
                 <View style = {{padding: 20, justifyContent: 'center'}} >
                     <Text >Setters Comments:</Text>
-                    <Text style = {[styles.pageText, {paddingTop: 5}]} >{this.state.climb.setterDescription}</Text>
+                    <Text style = {[styles.pageText, {paddingTop: 5}]} >{this.state.climb.description}</Text>
                 </View>
 
                 <View style = {styles.commentContainer} >
@@ -88,7 +104,7 @@ export class ClimbInfoScreen extends React.Component {
                     <FlatList
                         nestedScrollEnabled
                         style = {styles.commentList}
-                        data = {exampleComments}
+                        data = {this.state.climb.comments}
                         renderItem = {({item}) => <CommentCard textStyle = {{fontSize: 18}} comment = {item} /> }
                     />
                 </View>
